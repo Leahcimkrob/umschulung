@@ -7,9 +7,10 @@ body {
   font-family: 'Roboto Mono', monospace;
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
+  padding: 20px 0;
   background-color: #0a0f1a;
-  overflow: hidden;
+  overflow-x: hidden;
 }
 
 /* Hintergrund  */
@@ -62,7 +63,8 @@ body::after {
     0 0 30px #ff00ffaa;
   padding: 30px 35px;
   width: 600px;
-  height: 500px;
+  min-height: 500px;
+  max-height: none;
   color: #e0f7fa; 
   z-index: 1;
 }
@@ -144,6 +146,9 @@ body::after {
   list-style: none;
   padding: 0;
   margin: 0;
+  flex-grow: 1;
+  overflow-y: auto;
+  max-height: none;
 }
 
 /* List Item */

@@ -17,12 +17,20 @@
             const daten = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
             listElement.innerHTML = ""; 
 
-            daten.forEach(eintrag => {
+            // Daten nach Index sortieren (aufsteigend)
+            const sortierteDaten = daten.sort((a, b) => {
+                const indexA = a.index || 0;
+                const indexB = b.index || 0;
+                return indexA - indexB;
+            });
+
+            sortierteDaten.forEach(eintrag => {
                 // Unterscheidung zwischen alten String-Einträgen und neuen Objekten
                 const text = typeof eintrag === 'string' ? eintrag : eintrag.text;
                 const checked = typeof eintrag === 'string' ? false : eintrag.checked;
+                const index = typeof eintrag === 'string' ? Date.now() + Math.random() : eintrag.index;
                 
-                const listBox = new ListBox(text, counterRef, listElement, checked);
+                const listBox = new ListBox(text, counterRef, listElement, checked, index);
                 listElement.appendChild(listBox.listItem);
            });
         }
@@ -31,35 +39,32 @@
             localStorage.setItem(STORAGE_KEY, JSON.stringify(daten)); 
         }
 
+        function allesLoeschen() {
+            localStorage.removeItem(STORAGE_KEY);
+        }
+
         function hinzufuegen(neuerEintrag) {
             if (!neuerEintrag) return;
 
             const daten = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-            // Neuen Eintrag als Objekt mit text und checked-Status speichern
-            daten.push({ text: neuerEintrag, checked: false });
+            // Nächsten verfügbaren Index finden
+            const maxIndex = daten.length > 0 ? Math.max(...daten.map(eintrag => eintrag.index || 0)) : 0;
+            const neuerIndex = maxIndex + 1;
+            
+            // Neuen Eintrag als Objekt mit text, checked-Status und eindeutigem Index speichern
+            daten.push({ text: neuerEintrag, checked: false, index: neuerIndex });
             speichern(daten);
         }
 
         // Neue Funktion: Checkbox-Status aktualisieren
-        function checkboxStatusAktualisieren(text, checked) {
+        function checkboxStatusAktualisieren(index, checked) {
             const daten = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-            const index = daten.findIndex(eintrag => 
-                (typeof eintrag === 'string' ? eintrag : eintrag.text) === text
-            );
+            const eintragIndex = daten.findIndex(eintrag => eintrag.index === index);
             
-            if (index > -1) {
-                // Wenn es noch ein String ist, in Objekt umwandeln
-                if (typeof daten[index] === 'string') {
-                    daten[index] = { text: daten[index], checked: checked };
-                } else {
-                    daten[index].checked = checked;
-                }
+            if (eintragIndex > -1) {
+                daten[eintragIndex].checked = checked;
                 speichern(daten);
             }
-        }
-
-        function allesLoeschen() {
-            localStorage.removeItem(STORAGE_KEY);
         }
 
           class MyDomElement {
@@ -86,7 +91,7 @@
                     MyDomElement.counter++; 
                     this.counter.textContent = "Listen-Elemente: " + MyDomElement.counter;
                     
-                    const listBox = new ListBox(inputValue, this.counter, this.list, false);
+                    const listBox = new ListBox(inputValue, this.counter, this.list, false, (JSON.parse(localStorage.getItem(STORAGE_KEY)) || []).length);
                     this.list.appendChild(listBox.listItem);
                     this.input.value = ""; // Input nach dem Hinzufügen leeren
                 });
@@ -130,10 +135,11 @@
         }
 
         class ListBox{
-            constructor(name, counterRef, listRef, checked = false) {
+            constructor(name, counterRef, listRef, checked = false, index = null) {
                 this.counterRef = counterRef; // Referenz zum Counter speichern
                 this.listRef = listRef; // Referenz zur Liste
                 this.name = name; // Name für localStorage
+                this.index = index; // Eindeutiger Index
                 
                 this.listItem = document.createElement("li");
                 this.listItem.className = "list-item";
@@ -160,18 +166,16 @@
                 
                 // Event-Listener für Checkbox-Änderungen
                 this.todo.addEventListener("change", () => {
-                    checkboxStatusAktualisieren(this.name, this.todo.checked);
+                    checkboxStatusAktualisieren(this.index, this.todo.checked);
                 });
 
                 // Event-Listener für Delete-Button
                 this.deleteButton.addEventListener("click", () => {
-                    // Aus localStorage entfernen
+                    // Aus localStorage entfernen (basierend auf Index)
                     const daten = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-                    const index = daten.findIndex(eintrag => 
-                        (typeof eintrag === 'string' ? eintrag : eintrag.text) === this.name
-                    );
-                    if (index > -1) {
-                        daten.splice(index, 1);
+                    const eintragIndex = daten.findIndex(eintrag => eintrag.index === this.index);
+                    if (eintragIndex > -1) {
+                        daten.splice(eintragIndex, 1);
                         speichern(daten);
                     }
                     
