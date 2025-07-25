@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>Listen-Übung</title>
+</head>
+<body>
+    <div id="MyDomElement"></div>
+
+    <script>
+
+        class MyDomElement {
+            // Statische Variable kommen hier hin
+            static counter = 0;
+            constructor() {
+                this.input = document.createElement("input");
+                this.input.type = "text";
+                this.input.placeholder = "Bitte Text eingeben";
+                this.input.style.border = "2px solid red";
+                this.input.style.margin = "0 10px"; // Abstand oben und unten
+                
+                this.addbutton = document.createElement("button");
+                this.addbutton.textContent = "add";
+                this.addbutton.style.backgroundColor = "green"; 
+                this.addbutton.style.color = "white";
+                this.addbutton.style.border = "none";
+                this.addbutton.style.padding = "5px 10px";
+                this.addbutton.addEventListener("click", () => {
+                    MyDomElement.counter++; 
+                    this.counter.textContent = "Listen-Elemente: " + MyDomElement.counter;
+                const listBox = new ListBox(this.input.value.trim(), this.counter);
+                this.list.appendChild(listBox.listItem);
+                });
+
+                // Delete-Button für markierte Elemente
+                this.deleteButton = document.createElement("button");
+                this.deleteButton.textContent = "Delete Selected";
+                this.deleteButton.style.backgroundColor = "red";
+                this.deleteButton.style.color = "white";
+                this.deleteButton.style.border = "none";
+                this.deleteButton.style.padding = "5px 10px";
+                this.deleteButton.style.marginLeft = "10px";
+                this.deleteButton.addEventListener("click", () => {
+                    this.deleteSelectedItems();
+                });
+
+                this.counter = document.createElement("p");
+                this.counter.textContent = "Listen-Elemente: " + MyDomElement.counter;
+
+                this.list = document.createElement("ul");
+            }
+
+            // Funktion zum Löschen markierter Elemente
+            deleteSelectedItems() {
+                const checkboxes = this.list.querySelectorAll('input[type="checkbox"]:checked');
+                let deletedCount = 0;
+                
+                checkboxes.forEach(checkbox => {
+                    checkbox.closest('li').remove();
+                    deletedCount++;
+                });
+                
+                MyDomElement.counter -= deletedCount;
+                this.counter.textContent = "Listen-Elemente: " + MyDomElement.counter;
+            }
+
+            render(parent) {
+                parent.appendChild(this.input);
+                parent.appendChild(this.addbutton);
+                parent.appendChild(this.deleteButton);
+                parent.appendChild(this.counter);
+                parent.appendChild(this.list); 
+            }   
+
+        }
+
+        class ListBox{
+            constructor(name, counterRef) {
+                this.counterRef = counterRef; // Referenz zum Counter speichern
+
+                this.listItem = document.createElement("li");
+                this.listItem.style.display = "flex"; // Flexbox für horizontale Anordnung
+                this.listItem.style.alignItems = "center"; // Vertikal zentrieren
+                this.listItem.style.padding = "5px 0"; // Etwas Abstand
+                
+                // Checkbox für jeden Eintrag
+                this.checkbox = document.createElement("input");
+                this.checkbox.type = "checkbox";
+                this.checkbox.style.marginRight = "10px";
+                
+                // Text-Element für den Namen
+                this.textSpan = document.createElement("span");
+                this.textSpan.textContent = name;
+                
+                // Checkbox und Text zum Listitem hinzufügen
+                this.listItem.appendChild(this.checkbox);
+                this.listItem.appendChild(this.textSpan);
+            }
+
+        }
+
+        const app = document.getElementById("MyDomElement");
+        const widget = new MyDomElement();
+        widget.render(app);
+
+    </script>
+
+
+</body>
+</html>

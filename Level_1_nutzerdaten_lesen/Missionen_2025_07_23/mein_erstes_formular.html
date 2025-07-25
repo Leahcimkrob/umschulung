@@ -1,0 +1,88 @@
+<!--🧠 Auftrag: Programmiere die JS-Auswertung komplett selbst.-->
+
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Formular-Übung</title>
+  <style>
+    body { font-family: sans-serif; margin: 2em; }
+    label { display: block; margin: 0.5em 0; }
+  </style>
+</head>
+<body>
+
+<h2>Dein Formular</h2>
+
+<form id="userform">
+  <label>
+    Dein Vorname:
+    <input type="text" id="vorname">
+  </label>
+
+  <label>
+    <input type="checkbox" id="agb">
+    Ich akzeptiere die AGB
+  </label>
+
+  <label>
+    <input type="radio" name="niveau" value="Einsteiger" checked>
+    Einsteiger
+  </label>
+  <label>
+    <input type="radio" name="niveau" value="Fortgeschritten">
+    Fortgeschritten
+  </label>
+
+  <label>
+    Wähle dein Land:
+    <select id="land">
+      <option value="DE">Deutschland</option>
+      <option value="AT">Österreich</option>
+      <option value="CH">Schweiz</option>
+    </select>
+  </label>
+
+  <button type="submit">Absenden</button>
+</form>
+<br>
+<br>
+<br>
+Debug:
+<p id="output"></p>
+
+    <script>
+       const form = document.getElementById('userform');
+       form.addEventListener('submit', function(event) {
+              event.preventDefault(); // Verhindert das Neuladen der Seite
+
+                const nameInput = document.getElementById('vorname').value.trim();
+                const output = document.getElementById('output');
+                const checkbox = document.getElementById('agb');
+                const radiobuttons = document.querySelector('input[name="niveau"]:checked');
+                const dropdownmenu = document.getElementById('land').value;
+
+                // Lokale Anzeige (wie vorher)
+                output.innerHTML = 
+                    "Name: " + nameInput + 
+                    "<br>AGB: " + checkbox.checked + 
+                    "<br>Niveau: " + radiobuttons.value  + 
+                    "<br>Land: " + dropdownmenu;
+
+                // Daten an neue Seite weiterleiten
+                const params = new URLSearchParams();
+                params.append('vorname', nameInput);
+                params.append('agb', checkbox.checked);
+                params.append('niveau', radiobuttons.value);
+                params.append('land', dropdownmenu);
+
+                // Weiterleitung zur Ergebnisseite nach kurzer Verzögerung
+                setTimeout(function() {
+                    window.location.href = 'ergebnis.html?' + params.toString();
+                }, 1000); // 1 Sekunde Verzögerung, damit der Benutzer die lokale Anzeige sehen kann
+       });
+    </script>
+
+
+</body>
+</html>

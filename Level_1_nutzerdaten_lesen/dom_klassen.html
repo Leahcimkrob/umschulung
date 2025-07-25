@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>DOM-Klasse</title>
+</head>
+<body>
+    <div id="MyDomElement"></div>
+
+    <script>
+
+        class MyDomElement {
+            // Statische Variable kommen hier hin
+            constructor() {
+                this.input = document.createElement("input");
+                this.input.type = "text";
+                this.input.placeholder = "placeholderText";
+                this.input.style.border = "2px solid red";
+                
+                this.button = document.createElement("button");
+                this.button.textContent = "Button";
+                this.button.addEventListener("click", () => {
+                this.paragraph.textContent = this.input.value.trim() || "Bitte Text eingeben";
+
+                const greetingBox = new GreetingBox(this.input.value.trim() || "Bitte Text eingeben");
+                this.list.appendChild(greetingBox.listItem);
+                });
+
+                this.paragraph = document.createElement("p");
+                this.paragraph.textContent = "Text kommt noch"; 
+
+                this.list = document.createElement("ul");
+            }
+
+            render(parent) {
+                parent.appendChild(this.input);
+                parent.appendChild(this.button);
+                parent.appendChild(this.paragraph);
+                parent.appendChild(this.list); 
+            }   
+
+        }
+
+        class GreetingBox{
+            constructor(name) {
+                this.listItem = document.createElement("li");
+                this.listItem.textContent = name;
+            }
+
+        }
+
+        const app = document.getElementById("MyDomElement");
+        const widget = new MyDomElement();
+        widget.render(app);
+
+    </script>
+
+
+</body>
+</html>

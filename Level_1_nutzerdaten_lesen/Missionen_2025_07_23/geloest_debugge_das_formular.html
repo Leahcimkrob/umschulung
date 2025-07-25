@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<form id="myForm">
+    <input type="text" id="userInput">
+    <button type="submit">Los</button>
+</form>
+<div id="output"></div>
+
+<script>
+    const form = document.getElementById("myForm");
+    const input = document.getElementById("userInput");
+    const output = document.getElementById("output");
+    
+        form.addEventListener("submit", function(evt) {
+        evt.preventDefault(); 
+        const name = input.value;
+        output.innerHTML = "Hallo " + name;
+    });
+</script>
+
+</body>
+</html>

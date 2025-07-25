@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8" />
+    <title>DOM-Klassen</title>
+</head>
+<body>
+    
+    <input id="myInput">
+    <button onclick="hinzufuegen()">Hinzufuegen</button>
+    <button onclick="allesLoeschen()">Alles löschen</button>
+
+    <ul id="Liste"></ul>
+
+    <script>
+        const STORAGE_KEY = "storageKey";
+
+        function laden() {     
+            const daten = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+            const ul = document.createElement("liste");
+            ul.innerHTML = ""; // Vorhandene Einträge löschen
+            
+            daten.forEach(eintrag => {
+                const li = document.createElement("li");
+                li.textContent = eintrag;   
+                ul.appendChild(li);
+           });
+        }
+
+        function hinzufuegen() {
+            const input = document.getElementById("myInput");
+            const neuerEintrag = input.value.trim();
+            if (!neuerEintrag) return;
+
+            const daten = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+            daten.push(neuerEintrag);
+            localStorage.setItem(STORAGE_KEY, daten);
+
+
+        }
+    </script>
+
+</body>
+</html>

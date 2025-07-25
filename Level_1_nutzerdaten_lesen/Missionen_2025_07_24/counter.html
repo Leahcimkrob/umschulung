@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>title</title>
+</head>
+<body>
+    <div id="MyDomElement" 
+        style="display: flex; 
+        justify-content: center; 
+        align-items: center; 
+        height: 100vh;">
+    </div>
+
+    <script>
+
+        class MyDomElement {
+            // Statische Variable kommen hier hin^
+            static counter = 0;
+
+            constructor() {
+
+
+
+                this.button = document.createElement("button");
+                this.button.textContent = "-";
+                this.button.style.textAlign = "center"; // Text zentrieren
+                this.button.style.display = "inline-block"; // Horizontal anordnen
+                this.button.style.backgroundColor = "RED";
+                this.button.style.width = "50px"; // Feste Breite (gleich groß)
+                this.button.style.height = "40px"; // Feste Höhe (gleich groß)
+                this.button.addEventListener("click", () => {
+                    MyDomElement.counter--;
+                    this.paragraph.textContent = MyDomElement.counter;
+                });
+
+                this.paragraph = document.createElement("p");
+                this.paragraph.textContent = MyDomElement.counter;
+                this.paragraph.style.textAlign = "center"; // Text zentrieren
+                this.paragraph.style.fontSize = "35px"; // Schriftgröße anpassen
+                this.paragraph.style.margin = "0 30px"; // Abstand links und rechts
+                this.paragraph.style.display = "inline-block"; // Horizontal anordnen
+            
+                this.button2 = document.createElement("button");
+                this.button2.textContent = "+";
+                this.button2.style.textAlign = "center"; // Text zentrieren
+                this.button2.style.display = "inline-block"; // Horizontal anordnen
+                this.button2.style.backgroundColor = "green"; // Hintergrundfarbe ändern
+                this.button2.style.width = "50px"; // Feste Breite (gleich groß)
+                this.button2.style.height = "40px"; // Feste Höhe (gleich groß)
+                this.button2.addEventListener("click", () => {
+                    MyDomElement.counter++;
+                    this.paragraph.textContent = MyDomElement.counter;
+                });
+            }
+
+            render(parent) {
+                parent.appendChild(this.button);
+                parent.appendChild(this.paragraph);
+                parent.appendChild(this.button2);
+            }   
+
+        }
+
+        const app = document.getElementById("MyDomElement");
+        const widget = new MyDomElement();
+        widget.render(app);
+
+    </script>
+
+
+</body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <title>Formular-Ergebnis</title>
+</head>
+<body>
+
+  <h2>Formular-Ergebnis</h2>
+  <p id="output">
+<script>
+    const output = document.getElementById('output');
+  // URL-Parameter auslesen und anzeigen
+    const urlParams = new URLSearchParams(window.location.search);
+    const resultsDiv = document.getElementById('results');
+    
+    // Alle Parameter auslesen
+    const vorname = urlParams.get('vorname') || 'Nicht angegeben';
+    const agb = urlParams.get('agb') || 'false';
+    const niveau = urlParams.get('niveau') || 'Nicht ausgewählt';
+    const land = urlParams.get('land') || 'Nicht ausgewählt';
+    
+    output.innerHTML = 
+        "Name: " + vorname + 
+        "<br>AGB: " + agb + 
+        "<br>Niveau: " + niveau + 
+        "<br>Land: " + land;
+</script>
+<br>
+<br>
+<a href="mein_erstes_formular.html" class="back-button">Zurück zum Formular</a>
+
+
+</body>
+</html>

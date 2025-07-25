@@ -1,0 +1,19 @@
+
+
+
+Was bewirkt event.preventDefault() im Formular?
+    Verhindert das Neuladen der Seite, wenn das Formular abgeschickt wird.
+
+Wie liest man den Wert eines Textfelds aus?
+    const nameInput = document.getElementById("[textfeld-id]").value.trim();
+
+Wie prüft man, ob eine Checkbox angehakt ist?
+    const checkbox = document.getElementById("[checkbox-id]")checked;
+
+Wie liest man den aktuell ausgewählten Radiobutton aus?
+    const radiobuttons = document.querySelector('input[name="[name-der-gruppe]"]:checked').value;
+
+Was gibt .value bei einem select-Element zurück?
+    die aktuell ausgewählte Option
+
+

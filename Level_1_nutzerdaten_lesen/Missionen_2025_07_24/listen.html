@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>Listen-Übung</title>
+
+<style>
+
+    body {
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background-color: #f0f0f0;
+    }
+
+    .abfrage {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        border-radius: 15px;
+        border: 2px solid black;
+        padding: 30px 35px;
+        width: 400px;
+        height: 500px;
+        z-index: 1;
+    }
+
+    /* Input Container */
+    .input-container {
+        display: flex;
+        gap: 10px;
+        align-items: center;
+        margin-bottom: -10px;
+    }
+
+    /* Input Field */
+    .input-field {
+        border: 2px solid red;
+        flex: 1;
+        padding: 5px;
+    }
+
+    /* Add Button */
+    .add-button {
+        background-color: green;
+        color: white;
+        border: none;
+        padding: 5px 30px;
+        cursor: pointer;
+    }
+     
+    .add-button:hover {
+        background-color: darkgreen;
+    }
+
+    /* List styling */
+    .todo-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    /* List Item */
+    .list-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 15px;
+        margin: 5px 0;
+        border: 2px solid #ccc;
+        border-radius: 10px;
+        background-color: #f9f9f9;
+    }
+
+    /* Left Container (Checkbox + Text) */
+    .left-container {
+        display: flex;
+        align-items: center;
+    }
+
+    /* Text in List Item */
+    .item-text {
+        margin-left: 8px;
+    }
+
+    /* Delete Button */
+    .delete-button {
+        background-color: red;
+        color: white;
+        border: none;
+        padding: 5px 20px;
+        cursor: pointer;
+        border-radius: 5px;
+    }
+
+    .delete-button:hover {
+        background-color: darkred;
+    }
+
+</style>
+
+
+</head>
+<body>
+
+    <div id="MyDomElement" class="abfrage"></div>
+
+    <script>
+
+        class MyDomElement {
+            // Statische Variable kommen hier hin
+            static counter = 0;
+            constructor() {
+                // Container für Input und Button
+                this.inputContainer = document.createElement("div");
+                this.inputContainer.className = "input-container";
+
+                this.input = document.createElement("input");
+                this.input.type = "text";
+                this.input.placeholder = "Bitte Text eingeben";
+                this.input.className = "input-field";
+                
+                this.button = document.createElement("button");
+                this.button.textContent = "add";
+                this.button.className = "add-button";
+                this.button.addEventListener("click", () => {
+                    MyDomElement.counter++; 
+                    this.counter.textContent = "Listen-Elemente: " + MyDomElement.counter;
+                const listBox = new ListBox(this.input.value.trim(), this.counter);
+                this.list.appendChild(listBox.listItem);
+                this.input.value = ""; // Input nach dem Hinzufügen leeren
+                });
+
+                this.counter = document.createElement("p");
+                this.counter.textContent = "Listen-Elemente: " + MyDomElement.counter;
+
+                this.list = document.createElement("ul");
+                this.list.className = "todo-list";
+            }
+
+            render(parent) {
+                // Input und Button zum Container hinzufügen
+                this.inputContainer.appendChild(this.input);
+                this.inputContainer.appendChild(this.button);
+                
+                // Elemente zum Parent hinzufügen
+                parent.appendChild(this.inputContainer);
+                parent.appendChild(this.counter);
+                parent.appendChild(this.list); 
+            }   
+
+        }
+
+        class ListBox{
+            constructor(name, counterRef) {
+                this.counterRef = counterRef; // Referenz zum Counter speichern
+                this.listItem = document.createElement("li");
+                this.listItem.className = "list-item";
+
+                // Container für Checkbox und Text
+                this.leftContainer = document.createElement("div");
+                this.leftContainer.className = "left-container";
+
+                // Text-Element für den Namen
+                this.textSpan = document.createElement("span");
+                this.textSpan.textContent = name;
+                this.textSpan.className = "item-text";
+                
+                // Delete-Button
+                this.deleteButton = document.createElement("button");
+                this.deleteButton.textContent = "Delete";
+                this.deleteButton.className = "delete-button";
+
+                // Checkbox
+                this.todo = document.createElement("input");
+                this.todo.type = "checkbox";
+
+                // Event-Listener für Delete-Button
+                this.deleteButton.addEventListener("click", () => {
+                    MyDomElement.counter--;
+                    this.counterRef.textContent = "Listen-Elemente: " + MyDomElement.counter; // Paragraph aktualisieren
+                    this.listItem.remove(); // Entfernt das gesamte Listitem
+                });
+                
+                // Text und Button zum Listitem hinzufügen
+                this.leftContainer.appendChild(this.todo);
+                this.leftContainer.appendChild(this.textSpan);
+                this.listItem.appendChild(this.leftContainer);
+                this.listItem.appendChild(this.deleteButton);
+            }
+
+        }
+
+        const app = document.getElementById("MyDomElement");
+        const widget = new MyDomElement();
+        widget.render(app);
+
+    </script>
+
+
+</body>
+</html>
