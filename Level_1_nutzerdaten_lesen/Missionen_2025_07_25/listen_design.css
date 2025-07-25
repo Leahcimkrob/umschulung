@@ -1,0 +1,200 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap');
+
+/* Reset & Body Setup */
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: 'Roboto Mono', monospace;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #0a0f1a;
+  overflow: hidden;
+}
+
+/* Hintergrund  */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background:
+    radial-gradient(circle at center, #14f9ff33, transparent 70%),
+    repeating-linear-gradient(0deg, #0affff22 0 1px, transparent 1px 30px),
+    repeating-linear-gradient(90deg, #0affff22 0 1px, transparent 1px 30px);
+  z-index: 0;
+}
+
+/* neon-Hintergrund */
+body::after {
+  content: "";
+  position: fixed;
+  top: 0; left: -200px;
+  width: 150%;
+  height: 100%;
+  background:
+    linear-gradient(90deg, transparent, #0affff88 50%, transparent),
+    linear-gradient(45deg, transparent, #ff00ff88 50%, transparent);
+  background-repeat: no-repeat;
+  background-size: 200% 100%, 200% 100%;
+  animation: moveLines 12s linear infinite;
+  z-index: 0;
+  mix-blend-mode: screen;
+}
+
+@keyframes moveLines {
+  0% {
+    background-position: 0% 0%, 100% 100%;
+  }
+  100% {
+    background-position: 100% 0%, 0% 100%;
+  }
+}
+
+.abfrage {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  background: rgba(10, 15, 26, 0.85);
+  border-radius: 15px;
+  box-shadow:
+    0 0 10px #0affffaa,
+    0 0 30px #ff00ffaa;
+  padding: 30px 35px;
+  width: 600px;
+  height: 500px;
+  color: #e0f7fa; 
+  z-index: 1;
+}
+
+/* Input Container */
+.input-container {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+/* Input Field */
+.input-field {
+  background: rgba(10, 15, 26, 0.7);
+  border: 2px solid #0affff88;
+  border-radius: 8px;
+  color: #e0f7fa;
+  padding: 10px 15px;
+  font-size: 14px;
+  font-family: 'Roboto Mono', monospace;
+  box-shadow: 0 0 5px #0affffaa;
+  outline: none;
+  flex: 1;
+}
+
+/* Add Button */
+.add-button {
+  background: linear-gradient(45deg, #0affff88, #ff00ff88);
+  color: #e0f7fa;
+  border: 2px solid #0affff88;
+  border-radius: 8px;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-family: 'Roboto Mono', monospace;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 0 10px #0affffaa, 0 0 20px #ff00ffaa;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Delete All Button */
+.delete-all-button {
+  background: linear-gradient(45deg, #ff4000, #ff0080);
+  color: #e0f7fa;
+  border: 2px solid #ff008088;
+  border-radius: 8px;
+  padding: 10px 15px;
+  font-size: 12px;
+  font-family: 'Roboto Mono', monospace;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 0 10px #ff008088, 0 0 20px #ff4000aa;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-left: 10px;
+}
+
+.delete-all-button:hover {
+  background: linear-gradient(45deg, #ff6000, #ff20a0);
+  box-shadow: 0 0 15px #ff008088, 0 0 30px #ff4000aa;
+  transform: translateY(-2px);
+}
+
+/* Counter */
+.counter {
+  color: #e0f7fa;
+  font-size: 16px;
+  font-family: 'Roboto Mono', monospace;
+  text-shadow: 0 0 10px #0affffaa;
+  margin: 15px 0;
+}
+
+/* List styling */
+.todo-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* List Item */
+.list-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 15px;
+  margin: 8px 0;
+  background: rgba(10, 15, 26, 0.6);
+  border: 1px solid #0affff44;
+  border-radius: 8px;
+  box-shadow: 0 0 5px #0affffaa;
+  color: #e0f7fa;
+  font-family: 'Roboto Mono', monospace;
+}
+
+/* Left Container (Checkbox + Text) */
+.left-container {
+  display: flex;
+  align-items: center;
+}
+
+/* Text in List Item */
+.item-text {
+  margin-left: 8px;
+  font-size: 14px;
+  color: #e0f7fa;
+}
+
+/* Checkbox */
+.checkbox {
+  width: 18px;
+  height: 18px;
+  accent-color: #0affff;
+  cursor: pointer;
+}
+
+/* Delete Button */
+.delete-button {
+  background: linear-gradient(45deg, #ff0080, #ff4000);
+  color: #e0f7fa;
+  border: 2px solid #ff008088;
+  border-radius: 6px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-family: 'Roboto Mono', monospace;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 0 8px #ff008088;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}

@@ -10,21 +10,25 @@
     <button onclick="hinzufuegen()">Hinzufuegen</button>
     <button onclick="allesLoeschen()">Alles löschen</button>
 
-    <ul id="Liste"></ul>
+    <ul id="liste"></ul>
 
     <script>
         const STORAGE_KEY = "storageKey";
 
         function laden() {     
             const daten = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
-            const ul = document.createElement("liste");
-            ul.innerHTML = ""; // Vorhandene Einträge löschen
-            
+            const ul = document.getElementById("liste");
+            ul.innerHTML = ""; 
+
             daten.forEach(eintrag => {
                 const li = document.createElement("li");
                 li.textContent = eintrag;   
                 ul.appendChild(li);
            });
+        }
+
+        function speichern(daten) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(daten)); 
         }
 
         function hinzufuegen() {
@@ -34,11 +38,18 @@
 
             const daten = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
             daten.push(neuerEintrag);
-            localStorage.setItem(STORAGE_KEY, daten);
-
-
+            speichern(daten);
+            laden();
         }
-    </script>
+
+        function allesLoeschen() {
+            localStorage.removeItem(STORAGE_KEY); 
+            laden(); 
+        }
+
+        laden()
+
+</script>
 
 </body>
 </html>

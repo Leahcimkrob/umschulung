@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>Listen-Übung</title>
+    <link rel="stylesheet" href="listen_design.css">
+</head>
+<body>
+
+    <div id="MyDomElement" class="abfrage"></div>
+
+    <script>
+
+             const STORAGE_KEY = "storageKey";
+
+        function laden(listElement, counterRef) {     
+            const daten = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+            listElement.innerHTML = ""; 
+
+            daten.forEach(eintrag => {
+                // Unterscheidung zwischen alten String-Einträgen und neuen Objekten
+                const text = typeof eintrag === 'string' ? eintrag : eintrag.text;
+                const checked = typeof eintrag === 'string' ? false : eintrag.checked;
+                
+                const listBox = new ListBox(text, counterRef, listElement, checked);
+                listElement.appendChild(listBox.listItem);
+           });
+        }
+
+        function speichern(daten) {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(daten)); 
+        }
+
+        function hinzufuegen(neuerEintrag) {
+            if (!neuerEintrag) return;
+
+            const daten = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+            // Neuen Eintrag als Objekt mit text und checked-Status speichern
+            daten.push({ text: neuerEintrag, checked: false });
+            speichern(daten);
+        }
+
+        // Neue Funktion: Checkbox-Status aktualisieren
+        function checkboxStatusAktualisieren(text, checked) {
+            const daten = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+            const index = daten.findIndex(eintrag => 
+                (typeof eintrag === 'string' ? eintrag : eintrag.text) === text
+            );
+            
+            if (index > -1) {
+                // Wenn es noch ein String ist, in Objekt umwandeln
+                if (typeof daten[index] === 'string') {
+                    daten[index] = { text: daten[index], checked: checked };
+                } else {
+                    daten[index].checked = checked;
+                }
+                speichern(daten);
+            }
+        }
+
+        function allesLoeschen() {
+            localStorage.removeItem(STORAGE_KEY);
+        }
+
+          class MyDomElement {
+            // Statische Variable kommen hier hin
+            static counter = 0;
+            constructor() {
+                // Container für Input und Button
+                this.inputContainer = document.createElement("div");
+                this.inputContainer.className = "input-container";
+
+                this.input = document.createElement("input");
+                this.input.type = "text";
+                this.input.placeholder = "Bitte Text eingeben";
+                this.input.className = "input-field";
+                
+                this.button = document.createElement("button");
+                this.button.textContent = "ADD";
+                this.button.className = "add-button";
+                this.button.addEventListener("click", () => {
+                    const inputValue = this.input.value.trim();
+                    if (!inputValue) return;
+                    
+                    hinzufuegen(inputValue); // localStorage speichern
+                    MyDomElement.counter++; 
+                    this.counter.textContent = "Listen-Elemente: " + MyDomElement.counter;
+                    
+                    const listBox = new ListBox(inputValue, this.counter, this.list, false);
+                    this.list.appendChild(listBox.listItem);
+                    this.input.value = ""; // Input nach dem Hinzufügen leeren
+                });
+
+                // Delete All Button
+                this.deleteAllButton = document.createElement("button");
+                this.deleteAllButton.textContent = "DELETE ALL";
+                this.deleteAllButton.className = "delete-all-button";
+                this.deleteAllButton.addEventListener("click", () => {
+                    allesLoeschen(); // localStorage löschen
+                    this.list.innerHTML = ""; // Alle Listenelemente entfernen
+                    MyDomElement.counter = 0; // Counter zurücksetzen
+                    this.counter.textContent = "Listen-Elemente: " + MyDomElement.counter;
+                });
+
+                this.counter = document.createElement("p");
+                this.counter.textContent = "Listen-Elemente: " + MyDomElement.counter;
+                this.counter.className = "counter";
+
+                this.list = document.createElement("ul");
+                this.list.className = "todo-list";
+                
+                // LocalStorage beim Start laden
+                laden(this.list, this.counter);
+                MyDomElement.counter = (JSON.parse(localStorage.getItem(STORAGE_KEY)) || []).length;
+                this.counter.textContent = "Listen-Elemente: " + MyDomElement.counter;
+            }
+
+            render(parent) {
+                // Input und Button zum Container hinzufügen
+                this.inputContainer.appendChild(this.input);
+                this.inputContainer.appendChild(this.button);
+                this.inputContainer.appendChild(this.deleteAllButton);
+                
+                // Elemente zum Parent hinzufügen
+                parent.appendChild(this.inputContainer);
+                parent.appendChild(this.counter);
+                parent.appendChild(this.list); 
+            }   
+
+        }
+
+        class ListBox{
+            constructor(name, counterRef, listRef, checked = false) {
+                this.counterRef = counterRef; // Referenz zum Counter speichern
+                this.listRef = listRef; // Referenz zur Liste
+                this.name = name; // Name für localStorage
+                
+                this.listItem = document.createElement("li");
+                this.listItem.className = "list-item";
+
+                // Container für Checkbox und Text
+                this.leftContainer = document.createElement("div");
+                this.leftContainer.className = "left-container";
+
+                // Text-Element für den Namen
+                this.textSpan = document.createElement("span");
+                this.textSpan.textContent = name;
+                this.textSpan.className = "item-text";
+                
+                // Delete-Button
+                this.deleteButton = document.createElement("button");
+                this.deleteButton.textContent = "DELETE";
+                this.deleteButton.className = "delete-button";
+
+                // Checkbox
+                this.todo = document.createElement("input");
+                this.todo.type = "checkbox";
+                this.todo.className = "checkbox";
+                this.todo.checked = checked; // Checkbox-Status setzen
+                
+                // Event-Listener für Checkbox-Änderungen
+                this.todo.addEventListener("change", () => {
+                    checkboxStatusAktualisieren(this.name, this.todo.checked);
+                });
+
+                // Event-Listener für Delete-Button
+                this.deleteButton.addEventListener("click", () => {
+                    // Aus localStorage entfernen
+                    const daten = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+                    const index = daten.findIndex(eintrag => 
+                        (typeof eintrag === 'string' ? eintrag : eintrag.text) === this.name
+                    );
+                    if (index > -1) {
+                        daten.splice(index, 1);
+                        speichern(daten);
+                    }
+                    
+                    MyDomElement.counter--;
+                    if (this.counterRef) this.counterRef.textContent = "Listen-Elemente: " + MyDomElement.counter;
+                    this.listItem.remove();
+                });
+                
+                // Text und Button zum Listitem hinzufügen
+                this.leftContainer.appendChild(this.todo);
+                this.leftContainer.appendChild(this.textSpan);
+                this.listItem.appendChild(this.leftContainer);
+                this.listItem.appendChild(this.deleteButton);
+            }
+
+        }
+
+        const app = document.getElementById("MyDomElement");
+        const widget = new MyDomElement();
+        widget.render(app);
+
+    </script>
+
+
+</body>
+</html>
