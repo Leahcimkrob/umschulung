@@ -1,0 +1,195 @@
+/* Personenverwaltung CSS */
+
+body {
+    font-family: Arial, sans-serif;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f5f5f5;
+}
+
+h1 {
+    color: #333;
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+h2 {
+    color: #555;
+    margin-top: 30px;
+    margin-bottom: 15px;
+}
+
+/* Formular Styling */
+form {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #333;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="date"] {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+input[type="submit"],
+button {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    margin-right: 10px;
+    margin-top: 10px;
+}
+
+input[type="submit"]:hover,
+button:hover {
+    background-color: #0056b3;
+}
+
+#cancelEdit {
+    background-color: #6c757d;
+}
+
+#cancelEdit:hover {
+    background-color: #545b62;
+}
+
+/* Listen Styling */
+#personenListe {
+    list-style: none;
+    padding: 0;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+
+.person-item {
+    background-color: white;
+    margin-bottom: 0;
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.person-item:last-child {
+    border-bottom: none;
+}
+
+.person-info {
+    flex-grow: 1;
+    cursor: pointer;
+}
+
+.person-info:hover {
+    color: #007bff;
+}
+
+.person-name {
+    font-weight: bold;
+    font-size: 1.1em;
+    margin-bottom: 5px;
+}
+
+.person-email {
+    color: #666;
+    font-size: 0.9em;
+}
+
+.person-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.edit-btn {
+    background-color: #28a745;
+    padding: 5px 10px;
+    font-size: 0.8em;
+}
+
+.edit-btn:hover {
+    background-color: #218838;
+}
+
+.delete-btn {
+    background-color: #dc3545;
+    padding: 5px 10px;
+    font-size: 0.8em;
+}
+
+.delete-btn:hover {
+    background-color: #c82333;
+}
+
+/* Detailansicht */
+#detailView {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.detail-item {
+    margin-bottom: 15px;
+    padding: 10px 0;
+    border-bottom: 1px solid #eee;
+}
+
+.detail-label {
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.detail-value {
+    color: #666;
+}
+
+#editPerson {
+    background-color: #28a745;
+}
+
+#editPerson:hover {
+    background-color: #218838;
+}
+
+#backToList {
+    background-color: #6c757d;
+}
+
+#backToList:hover {
+    background-color: #545b62;
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+    .person-item {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .person-actions {
+        margin-top: 10px;
+        justify-content: center;
+    }
+}

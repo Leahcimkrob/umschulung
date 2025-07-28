@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>Personenverwaltung</title>
+        <link rel="stylesheet" href="personenverwaltung.css">
+</head>
+<body>
+
+    <h1>Personenverwaltung</h1>
+    
+    <!-- Listensicht -->
+    <div id="listView" class="view">
+        <form id="personenForm">
+            <label for="vorname">Vorname:</label>
+            <input type="text" id="vorname" name="vorname" required />
+            
+            <label for="nachname">Nachname:</label>
+            <input type="text" id="nachname" name="nachname" required />
+            
+            <label for="geburtsdatum">Geburtsdatum:</label>
+            <input type="date" id="geburtsdatum" name="geburtsdatum" required />
+            
+            <label for="email">E-Mail:</label>
+            <input type="email" id="email" name="email" required />
+            
+            <input type="submit" value="Person hinzufügen" />
+            <input type="button" id="cancelEdit" value="Abbrechen" style="display: none;" />
+        </form>
+
+        <h2>Personenliste</h2>
+        <ul id="personenListe">
+            <!-- Hier werden die hinzugefügten Personen angezeigt -->
+        </ul>
+    </div>
+
+    <!-- Detailansicht -->
+    <div id="detailView" class="view" style="display: none;">
+        <h2>Personendetails</h2>
+        <div id="personDetails">
+            <!-- Hier werden die Personendetails angezeigt -->
+        </div>
+        <button id="editPerson">Bearbeiten</button>
+        <button id="backToList">Zurück zur Liste</button>
+    </div>
+
+    <script src="personenverwaltung.js"></script>
+</body>
+</html>

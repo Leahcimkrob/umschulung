@@ -1,0 +1,45 @@
+@startuml
+title PersonenverwaltungsApp - Klassendiagramm
+
+class Person {
+  - id: String
+  - vorname: String
+  - nachname: String
+  - geburtsdatum: Date
+  - email: String
+  + updateDetails(v: String, n: String, g: Date, e: String): void
+}
+
+class PersonManager {
+  - personen: Person[]
+  + addPerson(p: Person): void
+  + removePerson(id: String): void
+  + getPerson(id: String): Person
+  + updatePerson(p: Person): void
+  + loadFromStorage(): void
+  + saveToStorage(): void
+}
+
+class ListViewPage {
+  - manager: PersonManager
+  + render(): void
+  + handleAdd(): void
+  + handleDelete(id: String): void
+  + handleSelect(id: String): void
+}
+
+class DetailPage {
+  - person: Person
+  - manager: PersonManager
+  + render(): void
+  + handleSave(): void
+  + handleCancel(): void
+}
+
+PersonManager "1" *-- "*" Person
+ListViewPage --> PersonManager
+DetailPage --> PersonManager
+DetailPage --> Person
+
+@enduml
+ 
