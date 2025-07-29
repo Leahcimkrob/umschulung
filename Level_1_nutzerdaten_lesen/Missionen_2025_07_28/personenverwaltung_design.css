@@ -1,0 +1,419 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;700&display=swap');
+
+/* Reset & Body Setup */
+body {
+  margin: 0;
+  min-height: 100vh;
+  font-family: 'Roboto Mono', monospace;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 20px 0;
+  background-color: #0a0f1a;
+  overflow-x: hidden;
+}
+
+/* Hintergrund */
+body::before {
+  content: "";
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background:
+    radial-gradient(circle at center, #14f9ff33, transparent 70%),
+    repeating-linear-gradient(0deg, #0affff22 0 1px, transparent 1px 30px),
+    repeating-linear-gradient(90deg, #0affff22 0 1px, transparent 1px 30px);
+  z-index: 0;
+}
+
+/* Neon-Hintergrund */
+body::after {
+  content: "";
+  position: fixed;
+  top: 0; left: -200px;
+  width: 150%;
+  height: 100%;
+  background:
+    linear-gradient(90deg, transparent, #0affff88 50%, transparent),
+    linear-gradient(45deg, transparent, #ff00ff88 50%, transparent);
+  background-repeat: no-repeat;
+  background-size: 200% 100%, 200% 100%;
+  animation: moveLines 12s linear infinite;
+  z-index: 0;
+  mix-blend-mode: screen;
+}
+
+@keyframes moveLines {
+  0% {
+    background-position: 0% 0%, 100% 100%;
+  }
+  100% {
+    background-position: 100% 0%, 0% 100%;
+  }
+}
+
+/* Main Container */
+.view {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  background: rgba(10, 15, 26, 0.85);
+  border-radius: 15px;
+  box-shadow:
+    0 0 10px #0affffaa,
+    0 0 30px #ff00ffaa;
+  padding: 25px 30px;
+  width: 600px;
+  max-width: 90vw;
+  color: #e0f7fa;
+  z-index: 1;
+}
+
+h1 {
+  color: #e0f7fa;
+  text-align: center;
+  margin-bottom: 25px;
+  margin-top: 5px;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 2em;
+  font-weight: bold;
+  text-shadow: 0 0 20px #0affffaa;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  line-height: 1.2;
+}
+
+h2 {
+  color: #e0f7fa;
+  margin-top: 20px;
+  margin-bottom: 10px;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 1.5em;
+  font-weight: bold;
+  text-shadow: 0 0 10px #0affffaa;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+/* Formular Styling */
+form {
+  background: rgba(10, 15, 26, 0.7);
+  padding: 15px;
+  border-radius: 12px;
+  border: 2px solid #0affff44;
+  box-shadow: 0 0 15px #0affffaa;
+  margin-bottom: 15px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+  color: #e0f7fa;
+  font-family: 'Roboto Mono', monospace;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-size: 10px;
+  text-shadow: 0 0 5px #0affffaa;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="date"] {
+  width: 100%;
+  background: rgba(10, 15, 26, 0.7);
+  border: 2px solid #0affff88;
+  border-radius: 6px;
+  color: #e0f7fa;
+  padding: 8px 12px;
+  margin-bottom: 8px;
+  font-size: 12px;
+  font-family: 'Roboto Mono', monospace;
+  box-shadow: 0 0 5px #0affffaa;
+  outline: none;
+  box-sizing: border-box;
+  transition: all 0.3s ease;
+  height: 35px;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="date"]:focus {
+  border-color: #0affff;
+  box-shadow: 0 0 15px #0affffaa;
+}
+
+/* Date Input Kalender-Symbol Styling */
+input[type="date"]::-webkit-calendar-picker-indicator {
+  background-color: #b0bec5;
+  padding: 3px;
+  cursor: pointer;
+  border-radius: 3px;
+  opacity: 0.8;
+  transition: all 0.3s ease;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator:hover {
+  background-color: #e0f7fa;
+  opacity: 1;
+  box-shadow: 0 0 5px #0affffaa;
+}
+
+input[type="submit"],
+button {
+  background: linear-gradient(45deg, #0affff88, #ff00ff88);
+  color: #e0f7fa;
+  border: 2px solid #0affff88;
+  border-radius: 6px;
+  padding: 8px 16px;
+  font-size: 12px;
+  font-family: 'Roboto Mono', monospace;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 0 10px #0affffaa, 0 0 20px #ff00ffaa;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-right: 10px;
+  margin-top: 8px;
+  height: 35px;
+}
+
+input[type="submit"]:hover,
+button:hover {
+  background: linear-gradient(45deg, #0affff, #ff00ff);
+  box-shadow: 0 0 20px #0affffaa, 0 0 40px #ff00ffaa;
+  transform: translateY(-2px);
+}
+
+#cancelEdit {
+  background: linear-gradient(45deg, #ff4000, #ff0080);
+  border-color: #ff008088;
+  box-shadow: 0 0 10px #ff008088;
+}
+
+#cancelEdit:hover {
+  background: linear-gradient(45deg, #ff6000, #ff20a0);
+  box-shadow: 0 0 20px #ff008088;
+}
+
+/* Listen Styling */
+#personenListe {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  background: rgba(10, 15, 26, 0.6);
+  border-radius: 12px;
+  border: 2px solid #0affff44;
+  box-shadow: 0 0 15px #0affffaa;
+  overflow: hidden;
+}
+
+.person-item {
+  background: rgba(10, 15, 26, 0.6);
+  margin: 0;
+  padding: 15px;
+  border-bottom: 1px solid #0affff44;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: all 0.3s ease;
+}
+
+.person-item:last-child {
+  border-bottom: none;
+}
+
+.person-item:hover {
+  background: rgba(10, 255, 255, 0.1);
+  box-shadow: 0 0 10px #0affffaa;
+}
+
+.person-info {
+  flex-grow: 1;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.person-info:hover {
+  color: #0affff;
+  text-shadow: 0 0 10px #0affffaa;
+}
+
+.person-name {
+  font-weight: bold;
+  font-size: 1.1em;
+  margin-bottom: 5px;
+  color: #e0f7fa;
+  font-family: 'Roboto Mono', monospace;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.person-email {
+  color: #b0bec5;
+  font-size: 0.9em;
+  font-family: 'Roboto Mono', monospace;
+}
+
+.person-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.edit-btn {
+  background: linear-gradient(45deg, #00ff80, #00ffff);
+  border: 2px solid #00ff8088;
+  color: #0a0f1a;
+  padding: 8px 12px;
+  font-size: 0.8em;
+  border-radius: 6px;
+  font-family: 'Roboto Mono', monospace;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 0 8px #00ff8088;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.edit-btn:hover {
+  background: linear-gradient(45deg, #20ff90, #20ffff);
+  box-shadow: 0 0 15px #00ff8088;
+  transform: translateY(-2px);
+}
+
+.delete-btn {
+  background: linear-gradient(45deg, #ff0080, #ff4000);
+  color: #e0f7fa;
+  border: 2px solid #ff008088;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 0.8em;
+  font-family: 'Roboto Mono', monospace;
+  font-weight: bold;
+  cursor: pointer;
+  box-shadow: 0 0 8px #ff008088;
+  transition: all 0.3s ease;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.delete-btn:hover {
+  background: linear-gradient(45deg, #ff20a0, #ff6000);
+  box-shadow: 0 0 15px #ff008088;
+  transform: translateY(-2px);
+}
+
+/* Detailansicht */
+#detailView {
+  background: rgba(10, 15, 26, 0.85);
+  padding: 25px;
+  border-radius: 15px;
+  border: 2px solid #0affff44;
+  box-shadow: 0 0 20px #0affffaa, 0 0 40px #ff00ffaa;
+}
+
+.detail-item {
+  margin-bottom: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid #0affff44;
+  transition: all 0.3s ease;
+}
+
+.detail-item:hover {
+  background: rgba(10, 255, 255, 0.05);
+  border-radius: 8px;
+  padding-left: 10px;
+}
+
+.detail-label {
+  font-weight: bold;
+  color: #e0f7fa;
+  margin-bottom: 8px;
+  font-family: 'Roboto Mono', monospace;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  font-size: 12px;
+  text-shadow: 0 0 5px #0affffaa;
+}
+
+.detail-value {
+  color: #b0bec5;
+  font-family: 'Roboto Mono', monospace;
+  font-size: 14px;
+  font-weight: normal;
+}
+
+#editPerson {
+  background: linear-gradient(45deg, #00ff80, #00ffff);
+  border: 2px solid #00ff8088;
+  color: #0a0f1a;
+  box-shadow: 0 0 10px #00ff8088;
+}
+
+#editPerson:hover {
+  background: linear-gradient(45deg, #20ff90, #20ffff);
+  box-shadow: 0 0 20px #00ff8088;
+}
+
+#backToList {
+  background: linear-gradient(45deg, #ff4000, #ff0080);
+  border: 2px solid #ff008088;
+  box-shadow: 0 0 10px #ff008088;
+}
+
+#backToList:hover {
+  background: linear-gradient(45deg, #ff6000, #ff20a0);
+  box-shadow: 0 0 20px #ff008088;
+}
+
+/* Responsive Design */
+@media (max-width: 600px) {
+  .view {
+    width: 95vw;
+    padding: 20px;
+  }
+  
+  .person-item {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 15px;
+  }
+  
+  .person-actions {
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  
+  h1 {
+    font-size: 2em;
+    letter-spacing: 2px;
+  }
+  
+  h2 {
+    font-size: 1.2em;
+    letter-spacing: 1px;
+  }
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(10, 15, 26, 0.5);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(45deg, #0affff88, #ff00ff88);
+  border-radius: 4px;
+  box-shadow: 0 0 5px #0affffaa;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(45deg, #0affff, #ff00ff);
+  box-shadow: 0 0 10px #0affffaa;
+}
