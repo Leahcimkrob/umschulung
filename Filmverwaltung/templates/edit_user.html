@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <title>Kunde bearbeiten</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='m70_mini_netflix.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h2>Kunde bearbeiten</h2>
+        {% if error %}<p style="color:#ff4081;">{{ error }}</p>{% endif %}
+        <form method="post">
+            <label for="username">Benutzername:</label><br>
+            <input type="text" name="username" id="username" value="{{ user[1] }}" required><br>
+            <label for="password">Passwort:</label><br>
+            <div style="position:relative; width:80%;">
+                <input type="password" name="password" id="password" value="{{ user[2] }}" required style="width:100%;">
+                <button type="button" onclick="togglePassword()" style="position:absolute; right:5px; top:7px; background:none; border:none; color:#0affff; cursor:pointer; font-size:16px;">👁️</button>
+                <button type="button" onclick="generatePassword()" style="position:absolute; right:40px; top:7px; background:none; border:none; color:#ff4081; cursor:pointer; font-size:16px;">🔑</button>
+            </div><br>
+            <button type="submit" class="btn">Speichern</button>
+            <a href="{{ url_for('users') }}" class="btn">Abbrechen</a>
+        </form>
+        <form method="post" action="{{ url_for('delete_user', user_id=user[0]) }}" style="margin-top:12px;">
+            <button type="submit" class="btn" style="background:#ff4081;">Benutzer löschen</button>
+        </form>
+        <hr>
+        <h3>Ausgeliehene Filme</h3>
+        {% if movies and movies|length > 0 %}
+            <ul>
+            {% for movie in movies %}
+                <li>{{ movie.title }} ({{ movie.genre }})<br>
+                    Ausleihdatum: {{ movie.rental_date }}
+                    <form method="post" style="display:inline;">
+                        <input type="hidden" name="return_rental_id" value="{{ movie.rental_id }}">
+                        <button type="submit" class="btn" style="background:#ff4081;">Zurückgeben</button>
+                    </form>
+                </li>
+            {% endfor %}
+            </ul>
+        {% else %}
+            <p>Keine ausgeliehenen Filme.</p>
+        {% endif %}
+        <a href="{{ url_for('home') }}" class="btn">🏠 Home</a>
+    </div>
+    <script src="{{ url_for('static', filename='m70_mini_netflix.js') }}"></script>
+</body>
+</html>

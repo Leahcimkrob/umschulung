@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <title>Film ausleihen</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='m70_mini_netflix.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h2>Film ausleihen</h2>
+        {% if username %}<p class="rent-username">Kunde: {{ username }}</p>{% endif %}
+        <div class="rent-messages">
+            {% if info %}<p class="rent-info">{{ info }}</p>{% endif %}
+            {% if error %}<p class="rent-error">{{ error }}</p>{% endif %}
+        </div>
+        <form method="post">
+            <label for="user_id"><span class="small-star-red">★</span>Kunde:</label><br>
+            <span class="hint-filme">(Kunde auswählen)</span>
+            <select name="user_id" id="user_id" required>
+                <option value="">Bitte wählen</option>
+                {% for user in users %}
+                    <option value="{{ user[0] }}">{{ user[1] }}</option>
+                {% endfor %}
+            </select><br><br>
+            <label for="movie_id" class="label-filme"><span class="small-star-red">★</span>Filme:</label><br>
+            <span class="hint-filme">(Mehrfachauswahl mit <b>Strg</b> möglich)</span>
+            <select name="movie_id" id="movie_id" required multiple size="5">
+                {% for movie in movies %}
+                    <option value="{{ movie[0] }}">{{ movie[1] }} ({{ movie[2] }})</option>
+                {% endfor %}
+            </select><br>
+                    <div class="hint-filme">
+            <span class="small-star-red">★</span>(sind Pflichtfelder)
+        </div>
+            <br>
+            <button type="submit" class="btn">📽️+ Ausleihen</button>
+            <a href="{{ url_for('home') }}" class="btn">🛑 Abbrechen</a>
+        </form>
+        <a href="{{ url_for('home') }}" class="btn">🏠 Home</a>
+    </div>
+</body>
+</html>
