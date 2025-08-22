@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <title>Filme zurückgeben</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='m70_mini_netflix.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h2>Filme zurückgeben</h2>
+
+        {% if error %}<p style="color:#ff4081;">{{ error }}</p>{% endif %}
+        <form method="post">
+            <label for="user_id">Kunde:</label><br>
+        <span class="hint-filme">(Kunde auswählen um die Filmliste<br>anzuzeigen und und Film zurück zu geben )</span>
+            <select name="user_id" id="user_id" required onchange="this.form.submit()">
+                <option value="">Bitte wählen</option>
+                {% for user in users %}
+                    <option value="{{ user[0] }}" {% if selected_user_id and user[0]|string == selected_user_id|string %}selected{% endif %}>{{ user[1] }}</option>
+                {% endfor %}
+            </select>
+        </form>
+        {% if selected_user_id and rentals %}
+        <hr>
+        <h3>Aktuell ausgeliehene Filme</h3>
+        <ul>
+        {% for rental in rentals %}
+            {% if not rental[3] %}
+            <li>
+                {% set movie = movies | selectattr('0', 'equalto', rental[1]) | list | first %}
+                {{ movie[1] }} ({{ movie[2] }})<br>
+                Ausleihdatum: {{ rental[2] }}
+                <form method="post" style="display:inline;">
+                    <input type="hidden" name="user_id" value="{{ selected_user_id }}">
+                    <input type="hidden" name="return_rental_id" value="{{ rental[0] }}">
+                    <button type="submit" class="btn" style="background:#ff4081;">📽️- Zurückgeben</button>
+                </form>
+            </li>
+            {% endif %}
+        {% endfor %}
+        </ul>
+        {% endif %}
+        <a href="{{ url_for('home') }}" class="btn">🏠 Home</a>
+    </div>
+</body>
+</html>
+

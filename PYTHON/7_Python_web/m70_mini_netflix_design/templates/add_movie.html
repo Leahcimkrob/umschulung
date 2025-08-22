@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <title>Neuen Film hinzufügen</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='m70_mini_netflix.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>🎬 Mini-Netflix</h1>
+        <h2>Neuen Film hinzufügen</h2>
+        <form method="post">
+            <span class="small-star-red">★</span>Titel:<br>
+            <input name="title" required><br>
+            <span class="small-star-red">★</span>Genre:<br>
+            <input name="genre" required><br>
+            <div class="hint-filme">
+                <span class="small-star-red">★</span>(sind Pflichtfelder)
+            </div>
+            <br>
+            <button type="submit" class="btn">💾 Speichern</button>
+        </form>
+        <a href="{{ url_for('home') }}" class="btn">🏠 Home</a>
+    </div>
+</body>
+</html>

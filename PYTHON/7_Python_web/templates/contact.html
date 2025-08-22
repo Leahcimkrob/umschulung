@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="de">
+  <head>
+    <meta charset="utf-8" />
+    <title>{{ title }}</title>
+  </head>
+  <body>
+
+<!-- Navigation:
+   - da nicht etwa die html Seite ausgeführt wurde sondern ein Python Skript
+   - wird die folgende schreibweise von Python bzw. flask interpretiert:
+   - <a href="{{ url_for('home') }}">Home</a>
+-->
+
+    <nav>
+      <a href="{{ url_for('home') }}">Home</a>
+      <a href="{{ url_for('about') }}">About</a>
+      <a href="{{ url_for('contact') }}">Contact</a>
+    </nav>
+
+    <hr>
+
+    <h1>Kontakt</h1>
+    <p>E-Mail: demo@example.com</p>  </body>
+</html>

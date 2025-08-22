@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <title>Alle Filme</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='m70_mini_netflix.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>🎬 Mini-Netflix</h1>
+        <h2>Alle Filme</h2>
+        <span class="hint-filme">(Zum Bearbeiten, Filmtitel anklicken)</span>
+        <table style="width:100%; border-collapse:collapse;">
+            <thead>
+                <tr>
+                    <th style="text-align:left; padding:8px;">
+                        <a href="{{ url_for('show_movies', sort_by='title', order='desc' if sort_by=='title' and order=='asc' else 'asc') }}" style="color:#e0f7fa; text-decoration:none;">
+                            Titel {% if sort_by=='title' %}{{ '↓' if order=='desc' else '↑' }}{% endif %}
+                        </a>
+                    </th>
+                    <th style="text-align:left; padding:8px;">
+                        <a href="{{ url_for('show_movies', sort_by='genre', order='desc' if sort_by=='genre' and order=='asc' else 'asc') }}" style="color:#e0f7fa; text-decoration:none;">
+                            Genre {% if sort_by=='genre' %}{{ '↓' if order=='desc' else '↑' }}{% endif %}
+                        </a>
+                    </th>
+                    <th style="text-align:left; padding:8px;">Ausgeliehen von</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for movie in movies %}
+                <tr class="movie-card">
+                    <td style="padding:8px; text-align:left; vertical-align:top;">
+                        <div>
+                            <a href="{{ url_for('edit_movie', movie_id=movie.id) }}" style="color:#1976d2; text-decoration:underline;">{{ movie.title }}</a>
+                        </div>
+                        <div style="margin-top:8px; text-align:left;">
+                            <span class="likes">👍 {{ movie.likes }}</span>
+                            <form method="post" action="{{ url_for('like_movie', movie_id=movie.id) }}" style="display:inline;">
+                                <button type="submit" class="btn btn-small">Like</button>
+                            </form>
+                        </div>
+                    </td>
+                    <td style="padding:8px; text-align:left; vertical-align:top;">•  {{ movie.genre }}</td>
+                    <td style="padding:8px; text-align:left; vertical-align:top;">
+                        {% if movie.ausleiher and movie.ausleiher|length > 0 %}
+                            <span style="color:#ff4081;">{{ movie.ausleiher | join(', ') }}</span>
+                        {% else %}
+                            <span style="color:#4caf50;">nicht verliehen</span>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        <a href="{{ url_for('home') }}" class="btn">🏠 Home</a>
+    </div>
+</body>
+</html>
