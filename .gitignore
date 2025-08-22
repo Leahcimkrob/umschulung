@@ -16,9 +16,6 @@
 # Mono auto generated files
 mono_crash.*
 
-# Python-Ordner
-PHYTON/
-
 # SQL-Ordner
 SQL/
 *.db
@@ -406,4 +403,4 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
-/PYTHON
+
