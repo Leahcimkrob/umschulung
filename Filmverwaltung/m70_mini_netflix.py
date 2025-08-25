@@ -1,10 +1,12 @@
 import sqlite3
-from flask import Flask, render_template, request, redirect, url_for, g
+import re
+from flask import Flask, render_template, request, redirect, url_for, g, session
 from m70_movie_service import MovieService
 from m70_user_service import UserService
 from datetime import datetime
 
 app = Flask(__name__)
+app.secret_key = 'supergeheim'  # Für Session
 DATABASE = 'mini_netflix.db'
 movie_service = MovieService(DATABASE)
 user_service = UserService(DATABASE)
@@ -15,14 +17,46 @@ def close_connection(exception):
     if db is not None:
         db.close()
 
+def login_required(f):
+    from functools import wraps
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        if 'username' not in session:
+            return redirect(url_for('login'))
+        return f(*args, **kwargs)
+    return decorated_function
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    error = None
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        user = user_service.get_user_by_username(username)
+        if user and user[2] == password:
+            session['username'] = username
+            return redirect(url_for('home'))
+        else:
+            error = 'Login fehlgeschlagen!'
+    return render_template('login.html', error=error)
+
+@app.route('/logout', methods=['GET', 'POST'])
+def logout():
+    session.pop('username', None)
+    return redirect(url_for('login'))
+
 @app.route('/')
+@login_required
 def home():
     movies = movie_service.get_all_movies()
     users = user_service.get_all_users(with_password=True)
-    return render_template('home.html', movies=movies, users=users)
+    user = user_service.get_user_by_username(session['username']) if 'username' in session else None
+    is_admin = user[3] if user else 0
+    return render_template('home.html', movies=movies, users=users, is_admin=is_admin)
 
 
 @app.route('/movies', methods=['GET'])
+@login_required
 def show_movies():
     sort_by = request.args.get('sort_by', 'title')
     order = request.args.get('order', 'asc')
@@ -46,6 +80,7 @@ def show_movies():
     return render_template('movies.html', movies=movie_list, sort_by=sort_by, order=order)
 
 @app.route('/add', methods=['GET', 'POST'])
+@login_required
 def add_movie():
     error = None
     if request.method == 'POST':
@@ -71,6 +106,22 @@ def rent_movie():
     info = None
     username = None
     if request.method == 'POST':
+        # Direktes Ausleihen aus der Filmliste (nur ein Film, aktueller User)
+        if request.form.get('movie_id') and request.form.get('user_id'):
+            movie_id = request.form.get('movie_id')
+            user_name = request.form.get('user_id')
+            user_obj = user_service.get_user_by_username(user_name)
+            if user_obj:
+                user_id = user_obj[0]
+                rental_date = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+                success = user_service.add_rental(user_id, movie_id, rental_date)
+                movie = movie_service.get_movie_by_id(movie_id)
+                if success:
+                    info = f"Film '{movie[1]}' erfolgreich ausgeliehen."
+                else:
+                    error = f"Film '{movie[1]}' ist bereits ausgeliehen."
+                return redirect(url_for('show_movies'))
+        # Standard-Ausleihen (mehrere Filme, Auswahl)
         user_id = request.form.get('user_id')
         movie_ids = request.form.getlist('movie_id')
         not_rented = []
@@ -133,8 +184,14 @@ def edit_user(user_id):
     if request.method == 'POST' and 'return_rental_id' not in request.form:
         username = request.form['username']
         password = request.form['password']
-        if username and password:
-            success = user_service.update_user(user_id, username, password)
+        is_admin = 1 if request.form.get('is_admin') == '1' else 0
+        allowed_pattern = r'^[A-Za-z0-9_#+!"§$%&/()?=.,:;Q]+$'
+        if ' ' in username:
+            error = 'Benutzernamen dürfen keine Leerzeichen enthalten.'
+        elif not re.match(allowed_pattern, username):
+            error = 'Benutzername enthält nicht erlaubte Zeichen.'
+        elif username and password:
+            success = user_service.update_user(user_id, username, password, is_admin)
             if success:
                 return redirect(url_for('users'))
             else:
@@ -148,13 +205,17 @@ def users():
     error = None
     username = ''
     password = ''
-    # Felder immer leer setzen, auch nach POST
     if request.method == 'POST':
-        # Benutzer wird angelegt, Felder bleiben leer
         entered_username = request.form['username']
         entered_password = request.form['password']
-        if entered_username and entered_password:
-            success = user_service.add_user(entered_username, entered_password)
+        is_admin = 1 if request.form.get('is_admin') == '1' else 0
+        allowed_pattern = r'^[A-Za-z0-9_#+!"§$%&/()?=.,:;Q]+$'
+        if ' ' in entered_username:
+            error = 'Benutzernamen dürfen keine Leerzeichen enthalten.'
+        elif not re.match(allowed_pattern, entered_username):
+            error = 'Benutzername enthält nicht erlaubte Zeichen.'
+        elif entered_username and entered_password:
+            success = user_service.add_user(entered_username, entered_password, is_admin)
             if not success:
                 error = 'Benutzername existiert bereits.'
         else:
@@ -162,29 +223,78 @@ def users():
     users = user_service.get_all_users(with_password=True)
     return render_template('users.html', users=users, error=error, username=username, password=password)
 
+@app.route('/profile', methods=['GET', 'POST'])
+def profile():
+    error = None
+    user = None
+    movies = []
+    if 'username' in session:
+        user = user_service.get_user_by_username(session['username'])
+        rentals = user_service.get_rentals_by_user_id(user[0])
+        for rental in rentals:
+            if rental[3] is None:  # Nur nicht zurückgegebene Filme anzeigen
+                movie = movie_service.get_movie_by_id(rental[1])
+                if movie:
+                    movies.append({
+                        'title': movie[1],
+                        'genre': movie[2],
+                        'rental_date': rental[2],
+                        'return_date': rental[3],
+                        'rental_id': rental[0]
+                    })
+    if request.method == 'POST':
+        if 'return_rental_id' in request.form:
+            rental_id = request.form.get('return_rental_id')
+            user_service.return_rental(rental_id)
+            return redirect(url_for('profile'))
+        entered_username = request.form.get('username')
+        entered_password = request.form.get('password')
+        allowed_pattern = r'^[A-Za-z0-9_#+!"§$%&/()?=.,:;Q]+$'
+        if ' ' in entered_username:
+            error = 'Benutzernamen dürfen keine Leerzeichen enthalten.'
+        elif not re.match(allowed_pattern, entered_username):
+            error = 'Benutzername enthält nicht erlaubte Zeichen.'
+        elif entered_username and entered_password:
+            # Profil-Update: Nur für eigenen User
+            success = user_service.update_user(user[0], entered_username, entered_password, user[3])
+            if success:
+                user = user_service.get_user_by_username(entered_username)
+                session['username'] = entered_username
+            else:
+                error = 'Benutzername existiert bereits.'
+        else:
+            error = 'Bitte Benutzername und Passwort eingeben.'
+    return render_template('profile.html', user=user, error=error, movies=movies)
+
+
 @app.route('/delete_user/<int:user_id>', methods=['POST'])
 def delete_user(user_id):
     user_service.delete_user(user_id)
     return redirect(url_for('users'))
 
-@app.route('/edit_movie/<int:movie_id>', methods=['GET', 'POST'])
-def edit_movie(movie_id):
+@app.route('/edit_movie', methods=['GET', 'POST'])
+def edit_movie():
     error = None
-    movie = movie_service.get_movie_by_id(movie_id)
-    if not movie:
-        return redirect(url_for('show_movies'))
-    if request.method == 'POST':
+    success = None
+    movie_id = request.args.get('movie_id', type=int)
+    movies = movie_service.get_all_movies()  # Liefert Liste aller Filme
+    movie = None
+    if movie_id:
+        movie = movie_service.get_movie_by_id(movie_id)
+    if request.method == 'POST' and movie_id:
         title = request.form['title']
         genre = request.form['genre']
         if title and genre:
-            success = movie_service.update_movie(movie_id, title, genre)
-            if success:
-                return redirect(url_for('show_movies'))
+            update_success = movie_service.update_movie(movie_id, title, genre)
+            if update_success:
+                success = 'Film erfolgreich gespeichert.'
+                # Bleibt auf der Seite, zeigt Erfolgsmeldung
+                movie = movie_service.get_movie_by_id(movie_id)
             else:
                 error = 'Fehler beim Speichern.'
         else:
             error = 'Bitte Titel und Genre eingeben.'
-    return render_template('edit_movie.html', movie=movie, error=error)
+    return render_template('edit_movie.html', movies=movies, movie=movie, movie_id=movie_id, error=error, success=success)
 
 @app.route('/delete_movie/<int:movie_id>', methods=['POST'])
 def delete_movie(movie_id):
@@ -205,6 +315,28 @@ def return_movie():
         user_service.return_rental(rental_id)
         return redirect(url_for('return_movie', user_id=selected_user_id))
     return render_template('return.html', users=users, movies=movies, error=error, selected_user_id=selected_user_id, rentals=rentals)
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    error = None
+    if request.method == 'POST':
+        username = request.form['username']
+        password = request.form['password']
+        allowed_pattern = r'^[A-Za-z0-9_#+!"§$%&/()?=.,:;Q]+$'
+        if ' ' in username:
+            error = 'Benutzernamen dürfen keine Leerzeichen enthalten.'
+        elif not re.match(allowed_pattern, username):
+            error = 'Benutzername enthält nicht erlaubte Zeichen.'
+        elif username and password:
+            # Standardmäßig kein Admin
+            success = user_service.add_user(username, password, 0)
+            if success:
+                return redirect(url_for('login'))
+            else:
+                error = 'Benutzername existiert bereits.'
+        else:
+            error = 'Bitte Benutzername und Passwort eingeben.'
+    return render_template('register.html', error=error)
 
 if __name__ == '__main__':
     app.run(debug=True)

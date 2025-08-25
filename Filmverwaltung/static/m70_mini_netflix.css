@@ -237,6 +237,22 @@ p {
 .ausgeliehen-btn:active {
   transform: translateY(0);
 }
+.ausleihen-btn {
+    background: #4caf50;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 6px 18px;
+    margin-left: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(76, 175, 80, 0.15);
+    transition: background 0.2s, box-shadow 0.2s;
+}
+.ausleihen-btn:hover {
+    background: #388e3c;
+    box-shadow: 0 4px 16px rgba(76, 175, 80, 0.25);
+}
 
 .small-star-red {
   color: #ff1744;
@@ -275,4 +291,54 @@ p {
   margin-top: 24px;
   position: relative;
   z-index: 10;
+}
+
+.logout-btn {
+  background: transparent;
+  color: #1976d2;
+  border: none;
+  padding: 0;
+  margin-right: 8px;
+  box-shadow: none;
+  font-size: 1.2em;
+  cursor: pointer;
+  position: relative;
+}
+.logout-icon {
+  position: relative;
+  display: inline-block;
+}
+.logout-tooltip {
+  visibility: hidden;
+  opacity: 0;
+  background: #222;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 4px 10px;
+  position: absolute;
+  left: 50%;
+  top: 120%;
+  transform: translateX(-50%);
+  z-index: 20;
+  font-size: 0.95em;
+  white-space: nowrap;
+  transition: opacity 0.2s;
+  pointer-events: none;
+}
+.logout-icon:hover .logout-tooltip,
+.logout-icon:focus .logout-tooltip {
+  visibility: visible;
+  opacity: 1;
+}
+
+.admin-checkbox {
+  width: 16px;
+  height: 16px;
+  accent-color: #000;
+  background: #fff;
+  border: 1px solid #888;
+  margin-left: 0;
+  margin-top: 2px;
+  vertical-align: middle;
 }

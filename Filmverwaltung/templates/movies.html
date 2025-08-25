@@ -8,7 +8,6 @@
     <div class="container">
         <h1>🎬 Mini-Netflix</h1>
         <h2>Alle Filme</h2>
-        <span class="hint-filme">(Zum Bearbeiten, Filmtitel anklicken)</span>
         <table style="width:100%; border-collapse:collapse;">
             <thead>
                 <tr>
@@ -30,7 +29,7 @@
                 <tr class="movie-card">
                     <td style="padding:8px; text-align:left; vertical-align:top;">
                         <div>
-                            <a href="{{ url_for('edit_movie', movie_id=movie.id) }}" style="color:#1976d2; text-decoration:underline;">{{ movie.title }}</a>
+                            <span style="color:#1976d2; font-weight:bold;">{{ movie.title }}</span>
                         </div>
                         <div style="margin-top:8px; text-align:left;">
                             <span class="likes">👍 {{ movie.likes }}</span>
@@ -39,7 +38,16 @@
                             </form>
                         </div>
                     </td>
-                    <td style="padding:8px; text-align:left; vertical-align:top;">•  {{ movie.genre }}</td>
+                    <td style="padding:8px; text-align:left; vertical-align:top;">
+                        •  {{ movie.genre }}
+                        <div style="margin-top:8px;">
+                            <form method="post" action="{{ url_for('rent_movie') }}" style="display:inline;">
+                                <input type="hidden" name="user_id" value="{{ session['username'] }}">
+                                <input type="hidden" name="movie_id" value="{{ movie.id }}">
+                                <button type="submit" class="btn btn-small ausleihen-btn">Ausleihen</button>
+                            </form>
+                        </div>
+                    </td>
                     <td style="padding:8px; text-align:left; vertical-align:top;">
                         {% if movie.ausleiher and movie.ausleiher|length > 0 %}
                             <span style="color:#ff4081;">{{ movie.ausleiher | join(', ') }}</span>

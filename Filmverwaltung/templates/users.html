@@ -17,9 +17,6 @@
                 <button type="button" onclick="togglePassword()" style="position:absolute; right:5px; top:7px; background:none; border:none; color:#0affff; cursor:pointer; font-size:16px;">👁️</button>
                 <button type="button" onclick="generatePassword()" style="position:absolute; right:40px; top:7px; background:none; border:none; color:#ff4081; cursor:pointer; font-size:16px;">🔑</button>
             </div><br>
-                    <div class="hint-filme">
-            <span class="small-star-red">★</span>(Pflichtfelder, um Kunden anzulegen)
-        </div>
             <button type="submit" class="btn">👤+ Benutzer anlegen</button>
         </form>
         <h3>Alle Kunden</h3>
@@ -29,6 +26,7 @@
                 <tr>
                     <th style="text-align:left; padding:4px;">Kunde</th>
                     <th style="text-align:left; padding:4px;">Passwort</th>
+                    <th style="text-align:left; padding:4px;">Admin</th>
                 </tr>
             </thead>
             <tbody>
@@ -40,6 +38,9 @@
                     <td style="padding:4px;">
                         <span id="pw-{{ user[0] }}">{{ '*' * user[2]|length }}</span>
                         <button type="button" onclick="toggleUserPassword({{ user[0] }}, '{{ user[2] }}')" style="background:none; border:none; color:#0affff; cursor:pointer; font-size:16px;">👁️</button>
+                    </td>
+                    <td style="padding:4px; text-align:center;">
+                        {% if user[3] == 1 %}✔️{% else %}-{% endif %}
                     </td>
                 </tr>
             {% endfor %}

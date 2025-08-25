@@ -11,7 +11,8 @@ class UserService:
         cur.execute('''CREATE TABLE IF NOT EXISTS users (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             username TEXT UNIQUE NOT NULL,
-            password TEXT NOT NULL
+            password TEXT NOT NULL,
+            is_admin INTEGER NOT NULL DEFAULT 0
         )''')
         cur.execute('''CREATE TABLE IF NOT EXISTS rentals (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -25,11 +26,11 @@ class UserService:
         conn.commit()
         conn.close()
 
-    def add_user(self, username, password):
+    def add_user(self, username, password, is_admin=0):
         conn = sqlite3.connect(self.db_path)
         cur = conn.cursor()
         try:
-            cur.execute("INSERT INTO users (username, password) VALUES (?, ?)", (username, password))
+            cur.execute("INSERT INTO users (username, password, is_admin) VALUES (?, ?, ?)", (username, password, is_admin))
             conn.commit()
         except sqlite3.IntegrityError:
             conn.close()
@@ -41,9 +42,9 @@ class UserService:
         conn = sqlite3.connect(self.db_path)
         cur = conn.cursor()
         if with_password:
-            cur.execute("SELECT id, username, password FROM users ORDER BY username ASC")
+            cur.execute("SELECT id, username, password, is_admin FROM users ORDER BY username ASC")
         else:
-            cur.execute("SELECT id, username FROM users ORDER BY username ASC")
+            cur.execute("SELECT id, username, is_admin FROM users ORDER BY username ASC")
         users = cur.fetchall()
         conn.close()
         return users
@@ -51,7 +52,7 @@ class UserService:
     def get_user_by_username(self, username):
         conn = sqlite3.connect(self.db_path)
         cur = conn.cursor()
-        cur.execute("SELECT id, username FROM users WHERE username = ?", (username,))
+        cur.execute("SELECT id, username, password, is_admin FROM users WHERE username = ?", (username,))
         user = cur.fetchone()
         conn.close()
         return user
@@ -59,16 +60,16 @@ class UserService:
     def get_user_by_id(self, user_id):
         conn = sqlite3.connect(self.db_path)
         cur = conn.cursor()
-        cur.execute("SELECT id, username, password FROM users WHERE id = ?", (user_id,))
+        cur.execute("SELECT id, username, password, is_admin FROM users WHERE id = ?", (user_id,))
         user = cur.fetchone()
         conn.close()
         return user
 
-    def update_user(self, user_id, username, password):
+    def update_user(self, user_id, username, password, is_admin=0):
         conn = sqlite3.connect(self.db_path)
         cur = conn.cursor()
         try:
-            cur.execute("UPDATE users SET username = ?, password = ? WHERE id = ?", (username, password, user_id))
+            cur.execute("UPDATE users SET username = ?, password = ?, is_admin = ? WHERE id = ?", (username, password, is_admin, user_id))
             conn.commit()
         except sqlite3.IntegrityError:
             conn.close()

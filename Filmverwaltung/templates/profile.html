@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-    <title>Kunde bearbeiten</title>
+    <title>Pofil</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='m70_mini_netflix.css') }}">
 </head>
 <body>
@@ -17,12 +17,8 @@
                 <button type="button" onclick="togglePassword()" style="position:absolute; right:5px; top:7px; background:none; border:none; color:#0affff; cursor:pointer; font-size:16px;">👁️</button>
                 <button type="button" onclick="generatePassword()" style="position:absolute; right:40px; top:7px; background:none; border:none; color:#ff4081; cursor:pointer; font-size:16px;">🔑</button>
             </div><br>
-            <div style="margin-bottom: 8px;">
-                <input type="checkbox" name="is_admin" id="is_admin" value="1" {% if user[3] == 1 %}checked{% endif %} class="admin-checkbox">
-                <label for="is_admin" style="margin-left: 6px; font-size:0.95em;">Admin</label>
-            </div>
             <button type="submit" class="btn">Speichern</button>
-            <a href="{{ url_for('users') }}" class="btn">Abbrechen</a>
+            <a href="{{ url_for('home') }}" class="btn">Abbrechen</a>
         </form>
         <form method="post" action="{{ url_for('delete_user', user_id=user[0]) }}" style="margin-top:12px;">
             <button type="submit" class="btn" style="background:#ff4081;">Benutzer löschen</button>

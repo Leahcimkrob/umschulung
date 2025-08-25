@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <title>Registrieren - Mini Netflix</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='m70_mini_netflix.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Registrieren</h1>
+        {% if error %}
+            <p style="color:red;">{{ error }}</p>
+        {% endif %}
+        <form method="post">
+            <label for="username">Benutzername:</label><br>
+            <input type="text" id="username" name="username" required><br><br>
+            <label for="password">Passwort:</label><br>
+            <div style="position:relative; width:80%;">
+                <input type="password" id="password" name="password" required style="width:100%;">
+                <button type="button" onclick="togglePassword()" style="position:absolute; right:5px; top:7px; background:none; border:none; color:#0affff; cursor:pointer; font-size:16px;">👁️</button>
+                <button type="button" onclick="generatePassword()" style="position:absolute; right:40px; top:7px; background:none; border:none; color:#ff4081; cursor:pointer; font-size:16px;">🔑</button>
+            </div><br>
+            <button type="submit" class="btn">Registrieren</button>
+            <a href="{{ url_for('login') }}" class="btn" style="margin-left:10px; background:#1976d2; color:#fff;">Zurück zum Login</a>
+        </form>
+    </div>
+
+    <script>
+        function togglePassword() {
+            var passwordField = document.getElementById("password");
+            if (passwordField.type === "password") {
+                passwordField.type = "text";
+            } else {
+                passwordField.type = "password";
+            }
+        }
+
+        function generatePassword() {
+            var length = 16;
+            var charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-_=+?";
+            var password = "";
+            for (var i = 0, n = charset.length; i < length; ++i) {
+                password += charset.charAt(Math.floor(Math.random() * n));
+            }
+            document.getElementById("password").value = password;
+        }
+    </script>
+</body>
+</html>
