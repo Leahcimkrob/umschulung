@@ -24,6 +24,18 @@ Je nach Aufgabe kamen unter anderem folgende Technologien und Themen zum Einsatz
 * Objektorientierte Programmierung
 * Softwareentwicklung und Problemlösung
 
+## 🐍 Python-Projekt – Filmverwaltung
+
+Im Rahmen meiner Umschulung entstand eine webbasierte Filmverwaltung mit Python, Flask und SQLite.
+
+Die Anwendung beinhaltet unter anderem die Verwaltung von Filmen und Benutzern, Anmeldefunktionen sowie ein Ausleih- und Rückgabesystem.
+
+**Technologien:** Python, Flask, SQLite, HTML
+
+👉 [Quellcode der Filmverwaltung](https://github.com/Leahcimkrob/umschulung/tree/main/Filmverwaltung)
+
+*Das Projekt wurde als Ausbildungsaufgabe umgesetzt. Einzelne Implementierungen entsprechen den vereinfachten Anforderungen des Unterrichts und sind nicht für den produktiven Einsatz vorgesehen.*
+
 ## 📚 Hintergrund
 
 Die Aufgaben sind im Rahmen meiner Umschulung entstanden und reichen von einfachen Übungen bis hin zu kleineren eigenständigen Projekten.
